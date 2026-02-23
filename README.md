@@ -14,7 +14,7 @@ A GeoGuessr-style game where you hear audio clips of different languages and mus
 
 ## Features
 
-- **25 Languages** from around the world (English, Spanish, French, German, Italian, Portuguese, Russian, Japanese, Korean, Mandarin, Hindi, Arabic, Turkish, Thai, Vietnamese, Swahili, Dutch, Polish, Greek, Hebrew, Tamil, Yoruba, Indonesian, Swedish, Amharic)
+- **125+ Languages** from around the world (English, Spanish, French, German, Italian, Portuguese, Russian, Japanese, Korean, Mandarin, Hindi, Arabic, Turkish, Thai, Vietnamese, Swahili, Dutch, Polish, Greek, Hebrew, Tamil, Yoruba, Indonesian, Swedish, Amharic, Basque, Welsh, Georgian, and many more)
 - **Solo Mode** with global leaderboard
 - **Multiplayer Mode** with room codes and real-time gameplay via Supabase Realtime
 - **Interactive World Map** powered by Leaflet/OpenStreetMap
@@ -27,7 +27,7 @@ A GeoGuessr-style game where you hear audio clips of different languages and mus
 
 | Layer | Tool |
 |-------|------|
-| Framework | Next.js 15 (App Router) |
+| Framework | Next.js 16 (App Router) |
 | Styling | Tailwind CSS |
 | Map | react-leaflet + OpenStreetMap |
 | Database | Supabase (Postgres + Realtime) |
@@ -42,8 +42,8 @@ Wraps the Next.js build to auto-translate all JSX text in the game UI (buttons, 
 
 ```ts
 // next.config.ts (production)
-import { withLingoDotDev } from "@lingo.dev/compiler/next";
-export default withLingoDotDev(nextConfig, {
+import { withLingo } from "@lingo.dev/compiler/next";
+export default withLingo(nextConfig, {
   sourceLocale: "en",
   targetLocales: ["es", "fr", "de", "ja", "hi", "ar", "pt"]
 });
@@ -161,12 +161,13 @@ src/
 │   ├── Leaderboard.tsx         - Score table
 │   ├── RoomLobby.tsx           - Multiplayer waiting room
 │   ├── LanguageSwitcher.tsx    - UI language toggle
+│   ├── TranslationToast.tsx    - Language switch notification
 │   └── Navbar.tsx              - Navigation bar
 ├── lib/
 │   ├── supabase.ts             - Supabase client
 │   ├── geo.ts                  - Haversine formula + scoring
 │   ├── game.ts                 - Game logic
-│   ├── audio-data.ts           - 25 language entries
+│   ├── audio-data.ts           - 125+ language entries
 │   └── generate-audio.ts       - Web Speech API phrases
 └── locales/
     └── en.json                 - Static translation strings

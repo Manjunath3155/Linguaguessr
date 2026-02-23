@@ -1,0 +1,32 @@
+name: Lingo.dev Translation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/locales/en.json'
+      - 'i18n.json'
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run Lingo.dev CLI
+        run: npx lingo.dev@latest i18n
+        env:
+          LINGODODEV_API_KEY: ${{ secrets.LINGODODEV_API_KEY }}
+
+      - name: Commit translations
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add src/locales/
+          git diff --staged --quiet || git commit -m "chore: update translations via Lingo.dev"
+          git push

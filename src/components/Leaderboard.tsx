@@ -1,7 +1,5 @@
 "use client";
 
-import { useTranslation } from "@/lib/i18n";
-
 interface LeaderboardEntry {
   id: string;
   player_name: string;
@@ -15,16 +13,14 @@ interface LeaderboardProps {
 }
 
 export default function Leaderboard({ entries }: LeaderboardProps) {
-  const { t } = useTranslation();
-
   if (entries.length === 0) {
     return (
       <div className="flex flex-col items-center gap-4 rounded-2xl border border-border bg-surface/50 p-8 text-center">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-muted/50">
+        <svg data-lingo-skip width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-muted/50">
           <path d="M8 21h8M12 17v4M7 4h10l-1.2 5.3a4 4 0 0 1-7.6 0L7 4z" />
           <path d="M5 4h14" />
         </svg>
-        <p className="text-muted">{t("leaderboard.noScores")}</p>
+        <p className="text-muted">No scores yet. Be the first to play!</p>
       </div>
     );
   }
@@ -33,8 +29,8 @@ export default function Leaderboard({ entries }: LeaderboardProps) {
     <div className="overflow-hidden rounded-2xl border border-border bg-surface/80">
       <div className="border-b border-border px-4 py-3 sm:px-6">
         <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-muted">
-          <span>{t("leaderboard.player")}</span>
-          <span>{t("leaderboard.score")}</span>
+          <span>Player</span>
+          <span>Score</span>
         </div>
       </div>
       <div className="divide-y divide-border/50">

@@ -3,11 +3,9 @@
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { generateRoomCode } from "@/lib/game";
-import { useTranslation } from "@/lib/i18n";
 
 export default function MultiplayerPage() {
   const router = useRouter();
-  const { t } = useTranslation();
   const [joinCode, setJoinCode] = useState("");
   const [playerName, setPlayerName] = useState("");
   const [mode, setMode] = useState<"menu" | "create" | "join">("menu");
@@ -15,25 +13,24 @@ export default function MultiplayerPage() {
 
   const handleCreateRoom = useCallback(() => {
     if (!playerName.trim()) {
-      setError(t("errors.enterName"));
+      setError("Please enter your name");
       return;
     }
     const code = generateRoomCode();
-    // Store player info in sessionStorage for the room page
     sessionStorage.setItem(
       "linguaguessr_player",
       JSON.stringify({ name: playerName.trim(), isHost: true })
     );
     router.push(`/multiplayer/${code}`);
-  }, [playerName, router, t]);
+  }, [playerName, router]);
 
   const handleJoinRoom = useCallback(() => {
     if (!playerName.trim()) {
-      setError(t("errors.enterName"));
+      setError("Please enter your name");
       return;
     }
     if (joinCode.length !== 6) {
-      setError(t("errors.invalidCode"));
+      setError("Room code must be 6 characters");
       return;
     }
     sessionStorage.setItem(
@@ -41,15 +38,15 @@ export default function MultiplayerPage() {
       JSON.stringify({ name: playerName.trim(), isHost: false })
     );
     router.push(`/multiplayer/${joinCode.toUpperCase()}`);
-  }, [playerName, joinCode, router, t]);
+  }, [playerName, joinCode, router]);
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center px-4">
       <div className="w-full max-w-md flex flex-col items-center gap-8">
         <div className="text-center">
-          <h1 className="text-4xl font-bold mb-2">{t("multiplayer.title")}</h1>
+          <h1 className="text-4xl font-bold mb-2">Multiplayer</h1>
           <p className="text-muted">
-            {t("multiplayer.description")}
+            Challenge your friends to a language guessing battle!
           </p>
         </div>
 
@@ -60,13 +57,13 @@ export default function MultiplayerPage() {
               className="group flex items-center justify-center gap-3 rounded-xl border-2 border-accent/30 bg-accent/5 p-6 transition-all hover:border-accent hover:bg-accent/10"
             >
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/20">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-accent">
+                <svg data-lingo-skip width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-accent">
                   <path d="M12 5v14M5 12h14" />
                 </svg>
               </div>
               <div className="text-left">
-                <p className="font-semibold text-lg">{t("multiplayer.createRoom")}</p>
-                <p className="text-sm text-muted">{t("multiplayer.createRoomDesc")}</p>
+                <p className="font-semibold text-lg">Create Room</p>
+                <p className="text-sm text-muted">Start a new game and invite friends</p>
               </div>
             </button>
 
@@ -75,15 +72,15 @@ export default function MultiplayerPage() {
               className="group flex items-center justify-center gap-3 rounded-xl border-2 border-accent-secondary/30 bg-accent-secondary/5 p-6 transition-all hover:border-accent-secondary hover:bg-accent-secondary/10"
             >
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent-secondary/20">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-accent-secondary">
+                <svg data-lingo-skip width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-accent-secondary">
                   <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
                   <polyline points="10 17 15 12 10 7" />
                   <line x1="15" y1="12" x2="3" y2="12" />
                 </svg>
               </div>
               <div className="text-left">
-                <p className="font-semibold text-lg">{t("multiplayer.joinRoom")}</p>
-                <p className="text-sm text-muted">{t("multiplayer.joinRoomDesc")}</p>
+                <p className="font-semibold text-lg">Join Room</p>
+                <p className="text-sm text-muted">Enter a room code to join a game</p>
               </div>
             </button>
           </div>
@@ -98,24 +95,24 @@ export default function MultiplayerPage() {
               }}
               className="flex items-center gap-1 text-sm text-muted hover:text-foreground transition-colors self-start"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg data-lingo-skip width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M19 12H5" />
                 <path d="M12 19l-7-7 7-7" />
               </svg>
-              {t("multiplayer.back")}
+              Back
             </button>
 
             <h2 className="text-2xl font-bold">
-              {mode === "create" ? t("multiplayer.createRoom") : t("multiplayer.joinRoom")}
+              {mode === "create" ? "Create Room" : "Join Room"}
             </h2>
 
             <div>
               <label className="block text-sm font-medium text-muted mb-1.5">
-                {t("multiplayer.yourName")}
+                Your Name
               </label>
               <input
                 type="text"
-                placeholder={t("multiplayer.yourName")}
+                placeholder="Your Name"
                 value={playerName}
                 onChange={(e) => {
                   setPlayerName(e.target.value);
@@ -129,7 +126,7 @@ export default function MultiplayerPage() {
             {mode === "join" && (
               <div>
                 <label className="block text-sm font-medium text-muted mb-1.5">
-                  {t("multiplayer.roomCode")}
+                  Room Code
                 </label>
                 <input
                   type="text"
@@ -153,7 +150,7 @@ export default function MultiplayerPage() {
               onClick={mode === "create" ? handleCreateRoom : handleJoinRoom}
               className="w-full rounded-xl bg-gradient-to-r from-accent to-accent-secondary py-3 font-semibold text-white shadow-lg transition-all hover:shadow-xl hover:scale-[1.02]"
             >
-              {mode === "create" ? t("multiplayer.createAndStart") : t("multiplayer.joinRoom")}
+              {mode === "create" ? "Create & Start" : "Join Room"}
             </button>
           </div>
         )}

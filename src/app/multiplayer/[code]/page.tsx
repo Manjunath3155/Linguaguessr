@@ -9,7 +9,6 @@ import ScoreDisplay from "@/components/ScoreDisplay";
 import RoomLobby from "@/components/RoomLobby";
 import { selectRandomLanguages, DEFAULT_ROUNDS } from "@/lib/game";
 import { haversineDistance, calculateScore } from "@/lib/geo";
-import { useTranslation } from "@/lib/i18n";
 import type { LanguageData } from "@/lib/audio-data";
 import Link from "next/link";
 
@@ -31,7 +30,6 @@ type RoomPhase = "lobby" | "playing" | "result" | "finished";
 export default function MultiplayerRoomPage() {
   const params = useParams();
   const roomCode = (params.code as string) || "";
-  const { t } = useTranslation();
 
   const [player, setPlayer] = useState<PlayerInfo | null>(null);
   const [players, setPlayers] = useState<PlayerInfo[]>([]);
@@ -259,7 +257,7 @@ export default function MultiplayerRoomPage() {
   if (!player) {
     return (
       <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
-        <p className="text-muted">{t("errors.loadingMap")}</p>
+        <p className="text-muted">Loading map...</p>
       </div>
     );
   }
@@ -292,12 +290,12 @@ export default function MultiplayerRoomPage() {
     return (
       <div className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center px-4 py-8">
         <div className="w-full max-w-xl flex flex-col items-center gap-8">
-          <h1 className="text-4xl font-bold">{t("game.gameOver")}</h1>
+          <h1 className="text-4xl font-bold">Game Over!</h1>
 
           <ScoreDisplay
             score={totalScore}
             maxScore={totalRounds * 5000}
-            label={t("multiplayer.yourScore")}
+            label="Your Score"
             size="lg"
             animate
           />
@@ -306,7 +304,7 @@ export default function MultiplayerRoomPage() {
           <div className="w-full rounded-2xl border border-border bg-surface/80 overflow-hidden">
             <div className="border-b border-border px-4 py-3">
               <h3 className="text-sm font-semibold text-muted uppercase tracking-wider">
-                {t("multiplayer.finalRankings")}
+                Final Rankings
               </h3>
             </div>
             {sortedPlayers.map((p, i) => (
@@ -345,13 +343,13 @@ export default function MultiplayerRoomPage() {
               href="/multiplayer"
               className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent to-accent-secondary px-6 py-3 font-semibold text-white shadow-lg transition-all hover:shadow-xl hover:scale-105"
             >
-              {t("game.playAgain")}
+              Play Again
             </Link>
             <Link
               href="/"
               className="flex items-center gap-2 rounded-xl border border-border px-6 py-3 font-semibold text-foreground transition-colors hover:bg-surface"
             >
-              {t("multiplayer.home")}
+              Home
             </Link>
           </div>
         </div>
@@ -405,14 +403,14 @@ export default function MultiplayerRoomPage() {
 
         {/* Score */}
         <div className="w-full rounded-xl border border-border bg-surface/50 p-3 text-center">
-          <p className="text-xs text-muted uppercase tracking-wider">{t("multiplayer.yourScore")}</p>
+          <p className="text-xs text-muted uppercase tracking-wider">Your Score</p>
           <p className="text-2xl font-bold tabular-nums">{totalScore.toLocaleString()}</p>
         </div>
 
         {phase === "playing" ? (
           <>
             <div className="flex flex-col items-center gap-2 py-4">
-              <p className="text-sm text-muted">{t("game.whatLanguage")}</p>
+              <p className="text-sm text-muted">What language is this?</p>
               <AudioPlayer
                 languageId={currentLang.id}
                 audioUrl={currentLang.audioUrl}
@@ -423,11 +421,11 @@ export default function MultiplayerRoomPage() {
                 onClick={handleSubmitGuess}
                 className="w-full rounded-xl bg-gradient-to-r from-accent to-accent-secondary py-3 font-semibold text-white shadow-lg transition-all hover:shadow-xl hover:scale-[1.02]"
               >
-                {t("game.submitGuess")}
+                Submit Guess
               </button>
             ) : (
               <p className="text-sm text-muted/60 text-center">
-                {t("game.clickToPin")}
+                Click on the map to place your pin
               </p>
             )}
           </>

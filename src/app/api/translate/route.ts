@@ -1,15 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import { LingoDotDevEngine } from "lingo.dev/sdk";
 
-/**
- * Translation API endpoint.
- *
- * In production with Lingo.dev SDK installed:
- *   import { LingoDotDevEngine } from "lingo.dev/sdk";
- *   const engine = new LingoDotDevEngine({ apiKey: process.env.LINGODODEV_API_KEY });
- *   const translated = await engine.localizeText(text, { sourceLocale, targetLocale });
- *
- * For now, returns original text as fallback when SDK is not installed.
- */
+const engine = new LingoDotDevEngine({
+  apiKey: process.env.LINGODOTDEV_API_KEY!,
+});
+
 export async function POST(request: NextRequest) {
   const body = await request.json();
   const { text, targetLocale } = body;
@@ -18,15 +13,29 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Missing text or targetLocale" }, { status: 400 });
   }
 
-  // When Lingo.dev SDK is installed and configured, add translation logic here.
-  // The SDK call would be:
-  //   const { LingoDotDevEngine } = await import("lingo.dev/sdk");
-  //   const engine = new LingoDotDevEngine({ apiKey: process.env.LINGODODEV_API_KEY });
-  //   const translated = await engine.localizeText(text, { sourceLocale: "en", targetLocale });
+  if (!process.env.LINGODOTDEV_API_KEY) {
+    return NextResponse.json({
+      translated: text,
+      source: "fallback",
+      note: "Set LINGODOTDEV_API_KEY to enable real-time translation",
+    });
+  }
 
-  return NextResponse.json({
-    translated: text,
-    source: "fallback",
-    note: "Install lingo.dev and set LINGODODEV_API_KEY to enable real-time translation",
-  });
+  try {
+    const translated = await engine.localizeText(text, {
+      sourceLocale: "en",
+      targetLocale,
+    });
+
+    return NextResponse.json({
+      translated,
+      source: "lingo.dev",
+    });
+  } catch {
+    return NextResponse.json({
+      translated: text,
+      source: "fallback",
+      note: "Translation failed, returning original text",
+    });
+  }
 }

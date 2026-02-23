@@ -1,6 +1,5 @@
 "use client";
 
-import { useTranslation } from "@/lib/i18n";
 import { MIN_ROUNDS, MAX_ROUNDS } from "@/lib/game";
 
 interface RoundSelectorProps {
@@ -10,13 +9,11 @@ interface RoundSelectorProps {
 }
 
 export default function RoundSelector({ value, onChange, disabled }: RoundSelectorProps) {
-  const { t } = useTranslation();
-
   return (
     <div className="w-full max-w-sm">
       <div className="flex items-center justify-between mb-2">
         <label className="text-sm font-medium text-muted">
-          {t("game.roundsCount")}
+          Rounds
         </label>
         <span className="text-sm font-bold text-accent tabular-nums">{value}</span>
       </div>

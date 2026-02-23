@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import "leaflet/dist/leaflet.css";
 import type { LatLngExpression } from "leaflet";
-import { useTranslation } from "@/lib/i18n";
 
 interface GameMapProps {
   onPinPlaced: (lat: number, lng: number) => void;
@@ -20,7 +19,6 @@ export default function GameMap({
   showResult,
   disabled,
 }: GameMapProps) {
-  const { t } = useTranslation();
   const [MapComponents, setMapComponents] = useState<{
     MapContainer: typeof import("react-leaflet").MapContainer;
     TileLayer: typeof import("react-leaflet").TileLayer;
@@ -63,10 +61,10 @@ export default function GameMap({
     return (
       <div className="flex h-full w-full items-center justify-center rounded-xl bg-surface border border-border">
         <div className="flex items-center gap-2 text-muted">
-          <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg data-lingo-skip className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <circle cx="12" cy="12" r="10" strokeDasharray="60" strokeDashoffset="20" />
           </svg>
-          {t("errors.loadingMap")}
+          Loading map...
         </div>
       </div>
     );
@@ -82,7 +80,7 @@ export default function GameMap({
   });
 
   const correctIcon = L.divIcon({
-    html: `<div style="width:28px;height:28px;background:linear-gradient(135deg,#22c55e,#16a34a);border-radius:50%;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>`,
+    html: `<div style="width:28px;height:28px;background:linear-gradient(135deg,#22c55e,#16a34a);border-radius:50%;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;"><svg data-lingo-skip width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>`,
     className: "",
     iconSize: [28, 28],
     iconAnchor: [14, 14],

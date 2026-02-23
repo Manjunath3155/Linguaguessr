@@ -8,7 +8,6 @@ import ScoreDisplay from "@/components/ScoreDisplay";
 import RoundSelector from "@/components/RoundSelector";
 import { createNewGame, GameState, DEFAULT_ROUNDS } from "@/lib/game";
 import { haversineDistance, calculateScore } from "@/lib/geo";
-import { useTranslation } from "@/lib/i18n";
 import Link from "next/link";
 
 const GameMap = dynamic(() => import("@/components/GameMap"), { ssr: false });
@@ -16,7 +15,6 @@ const GameMap = dynamic(() => import("@/components/GameMap"), { ssr: false });
 type GamePhase = "ready" | "playing" | "result" | "finished";
 
 export default function PlayPage() {
-  const { t } = useTranslation();
   const [game, setGame] = useState<GameState | null>(null);
   const [phase, setPhase] = useState<GamePhase>("ready");
   const [guessPin, setGuessPin] = useState<{ lat: number; lng: number } | null>(null);
@@ -105,19 +103,19 @@ export default function PlayPage() {
       <div className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center px-4">
         <div className="flex flex-col items-center gap-6 text-center">
           <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-accent/20 to-accent-secondary/20">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-accent">
+            <svg data-lingo-skip width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-accent">
               <polygon points="5 3 19 12 5 21 5 3" />
             </svg>
           </div>
-          <h1 className="text-4xl font-bold">{t("game.soloMode")}</h1>
+          <h1 className="text-4xl font-bold">Solo Mode</h1>
           <p className="max-w-md text-muted">
-            {t("game.soloDescription")}
+            Listen to audio clips of different languages. Pin each one on the world map. The closer your guess, the more points you earn!
           </p>
           <RoundSelector value={roundCount} onChange={setRoundCount} />
           <div className="flex items-center gap-4 text-sm text-muted">
-            <span>{roundCount} {t("game.rounds")}</span>
+            <span>{roundCount} rounds</span>
             <span className="text-border">|</span>
-            <span>{t("game.maxPoints")}</span>
+            <span>Max 5,000 pts/round</span>
             <span className="text-border">|</span>
             <span>Max {(roundCount * 5000).toLocaleString()} total</span>
           </div>
@@ -125,10 +123,10 @@ export default function PlayPage() {
             onClick={startGame}
             className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent to-accent-secondary px-8 py-4 text-lg font-semibold text-white shadow-lg shadow-accent/25 transition-all hover:shadow-xl hover:scale-105"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <svg data-lingo-skip width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
               <polygon points="5 3 19 12 5 21 5 3" />
             </svg>
-            {t("game.startGame")}
+            Start Game
           </button>
         </div>
       </div>
@@ -143,11 +141,11 @@ export default function PlayPage() {
     return (
       <div className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center px-4 py-8">
         <div className="w-full max-w-xl flex flex-col items-center gap-8">
-          <h1 className="text-4xl font-bold">{t("game.gameOver")}</h1>
+          <h1 className="text-4xl font-bold">Game Over!</h1>
           <ScoreDisplay
             score={game.totalScore}
             maxScore={totalRounds * 5000}
-            label={t("game.finalScore")}
+            label="Final Score"
             size="lg"
             animate
           />
@@ -156,7 +154,7 @@ export default function PlayPage() {
           <div className="w-full rounded-2xl border border-border bg-surface/80 overflow-hidden">
             <div className="border-b border-border px-4 py-3">
               <h3 className="text-sm font-semibold text-muted uppercase tracking-wider">
-                {t("game.roundBreakdown")}
+                Round Breakdown
               </h3>
             </div>
             {game.rounds.map((round, i) => (
@@ -194,11 +192,11 @@ export default function PlayPage() {
           {/* Submit score */}
           {!submitted ? (
             <div className="w-full flex flex-col items-center gap-3">
-              <p className="text-sm text-muted">{t("game.submitToLeaderboard")}</p>
+              <p className="text-sm text-muted">Submit your score to the leaderboard</p>
               <div className="flex w-full max-w-sm gap-2">
                 <input
                   type="text"
-                  placeholder={t("game.yourName")}
+                  placeholder="Your name"
                   value={playerName}
                   onChange={(e) => setPlayerName(e.target.value)}
                   maxLength={20}
@@ -209,12 +207,12 @@ export default function PlayPage() {
                   disabled={!playerName.trim()}
                   className="rounded-lg bg-accent px-4 py-2 font-medium text-white transition-colors hover:bg-accent/80 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {t("game.submit")}
+                  Submit
                 </button>
               </div>
             </div>
           ) : (
-            <p className="text-sm text-green-400">{t("game.scoreSubmitted")}</p>
+            <p className="text-sm text-green-400">Score submitted!</p>
           )}
 
           {/* Action buttons */}
@@ -223,13 +221,13 @@ export default function PlayPage() {
               onClick={startGame}
               className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent to-accent-secondary px-6 py-3 font-semibold text-white shadow-lg transition-all hover:shadow-xl hover:scale-105"
             >
-              {t("game.playAgain")}
+              Play Again
             </button>
             <Link
               href="/leaderboard"
               className="flex items-center gap-2 rounded-xl border border-border px-6 py-3 font-semibold text-foreground transition-colors hover:bg-surface"
             >
-              {t("nav.leaderboard")}
+              Leaderboard
             </Link>
           </div>
         </div>
@@ -245,7 +243,7 @@ export default function PlayPage() {
         {/* Round indicator */}
         <div className="flex w-full items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-muted">{t("game.round")}</span>
+            <span className="text-sm font-medium text-muted">Round</span>
             <div className="flex gap-1">
               {Array.from({ length: totalRounds }).map((_, i) => (
                 <div
@@ -270,7 +268,7 @@ export default function PlayPage() {
 
         {/* Total score */}
         <div className="w-full rounded-xl border border-border bg-surface/50 p-3 text-center">
-          <p className="text-xs text-muted uppercase tracking-wider">{t("game.totalScore")}</p>
+          <p className="text-xs text-muted uppercase tracking-wider">Total Score</p>
           <p className="text-2xl font-bold tabular-nums">{game.totalScore.toLocaleString()}</p>
         </div>
 
@@ -278,7 +276,7 @@ export default function PlayPage() {
         {phase === "playing" ? (
           <>
             <div className="flex flex-col items-center gap-2 py-4">
-              <p className="text-sm text-muted">{t("game.whatLanguage")}</p>
+              <p className="text-sm text-muted">What language is this?</p>
               <AudioPlayer
                 languageId={currentRound.language.id}
                 audioUrl={currentRound.language.audioUrl}
@@ -289,11 +287,11 @@ export default function PlayPage() {
                 onClick={handleSubmitGuess}
                 className="w-full rounded-xl bg-gradient-to-r from-accent to-accent-secondary py-3 font-semibold text-white shadow-lg transition-all hover:shadow-xl hover:scale-[1.02]"
               >
-                {t("game.submitGuess")}
+                Submit Guess
               </button>
             ) : (
               <p className="text-sm text-muted/60 text-center">
-                {t("game.clickToPin")}
+                Click on the map to place your pin
               </p>
             )}
           </>

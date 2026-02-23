@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Leaderboard from "@/components/Leaderboard";
-import { useTranslation } from "@/lib/i18n";
 import Link from "next/link";
 
 interface LeaderboardEntry {
@@ -14,7 +13,6 @@ interface LeaderboardEntry {
 }
 
 export default function LeaderboardPage() {
-  const { t } = useTranslation();
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -39,27 +37,27 @@ export default function LeaderboardPage() {
     <div className="mx-auto max-w-2xl px-4 py-8 sm:py-12">
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">{t("leaderboard.title")}</h1>
-          <p className="mt-1 text-sm text-muted">{t("leaderboard.subtitle")}</p>
+          <h1 className="text-3xl font-bold">Leaderboard</h1>
+          <p className="mt-1 text-sm text-muted">Top players from around the world</p>
         </div>
         <Link
           href="/play"
           className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent to-accent-secondary px-4 py-2 text-sm font-semibold text-white shadow transition-all hover:shadow-lg hover:scale-105"
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <svg data-lingo-skip width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
             <polygon points="5 3 19 12 5 21 5 3" />
           </svg>
-          {t("leaderboard.playNow")}
+          Play Now
         </Link>
       </div>
 
       {loading ? (
         <div className="flex items-center justify-center py-20">
           <div className="flex items-center gap-2 text-muted">
-            <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg data-lingo-skip className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="12" cy="12" r="10" strokeDasharray="60" strokeDashoffset="20" />
             </svg>
-            {t("leaderboard.loadingScores")}
+            Loading scores...
           </div>
         </div>
       ) : (

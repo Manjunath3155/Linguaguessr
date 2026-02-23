@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { samplePhrases } from "@/lib/generate-audio";
-import { useTranslation } from "@/lib/i18n";
 
 interface AudioPlayerProps {
   languageId: string;
@@ -11,7 +10,6 @@ interface AudioPlayerProps {
 }
 
 export default function AudioPlayer({ languageId, audioUrl, disabled }: AudioPlayerProps) {
-  const { t } = useTranslation();
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasPlayed, setHasPlayed] = useState(false);
   const [useWebSpeech, setUseWebSpeech] = useState(false);
@@ -115,22 +113,22 @@ export default function AudioPlayer({ languageId, audioUrl, disabled }: AudioPla
           <div className="absolute inset-0 rounded-full bg-accent/30 animate-pulse-ring" />
         )}
         {isPlaying ? (
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
+          <svg data-lingo-skip width="28" height="28" viewBox="0 0 24 24" fill="white">
             <rect x="6" y="4" width="4" height="16" rx="1" />
             <rect x="14" y="4" width="4" height="16" rx="1" />
           </svg>
         ) : (
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
+          <svg data-lingo-skip width="28" height="28" viewBox="0 0 24 24" fill="white">
             <polygon points="5 3 19 12 5 21 5 3" />
           </svg>
         )}
       </button>
       <p className="text-sm text-muted">
-        {isPlaying ? t("game.playing") : hasPlayed ? t("game.clickToReplay") : t("game.clickToListen")}
+        {isPlaying ? "Playing..." : hasPlayed ? "Click to replay" : "Click to listen"}
       </p>
       {showTextFallback && phrase && (
         <div className="w-full max-w-xs rounded-lg border border-accent/20 bg-accent/5 p-3 text-center">
-          <p className="text-xs text-muted mb-1">{t("game.audioUnavailable")}</p>
+          <p className="text-xs text-muted mb-1">Audio unavailable — read the text and guess!</p>
           <p className="text-sm font-medium text-foreground italic">&ldquo;{phrase.text}&rdquo;</p>
         </div>
       )}

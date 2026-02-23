@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useTranslation, type Locale } from "@/lib/i18n";
+import { useLingoContext } from "@lingo.dev/compiler/react";
+import TranslationToast from "./TranslationToast";
 
-const UI_LANGUAGES: { code: Locale; name: string; flag: string }[] = [
+const UI_LANGUAGES: { code: string; name: string; flag: string }[] = [
   { code: "en", name: "English", flag: "EN" },
   { code: "es", name: "Espanol", flag: "ES" },
   { code: "fr", name: "Francais", flag: "FR" },
@@ -16,7 +17,9 @@ const UI_LANGUAGES: { code: Locale; name: string; flag: string }[] = [
 
 export default function LanguageSwitcher() {
   const [isOpen, setIsOpen] = useState(false);
-  const { locale, setLocale } = useTranslation();
+  const [toastLang, setToastLang] = useState("");
+  const [showToast, setShowToast] = useState(false);
+  const { locale, setLocale } = useLingoContext();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -37,13 +40,13 @@ export default function LanguageSwitcher() {
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-surface-hover"
       >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-accent">
+        <svg data-lingo-skip width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-accent">
           <circle cx="12" cy="12" r="10" />
           <path d="M2 12h20" />
           <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
         </svg>
         {selected.flag}
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={`transition-transform ${isOpen ? "rotate-180" : ""}`}>
+        <svg data-lingo-skip width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={`transition-transform ${isOpen ? "rotate-180" : ""}`}>
           <path d="M6 9l6 6 6-6" />
         </svg>
       </button>
@@ -54,7 +57,12 @@ export default function LanguageSwitcher() {
             <button
               key={lang.code}
               onClick={() => {
-                setLocale(lang.code);
+                if (lang.code !== locale && lang.code !== "en") {
+                  setToastLang(lang.name);
+                  setShowToast(true);
+                }
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                setLocale(lang.code as any);
                 setIsOpen(false);
               }}
               className={`flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm transition-colors first:rounded-t-xl last:rounded-b-xl ${
@@ -69,6 +77,11 @@ export default function LanguageSwitcher() {
           ))}
         </div>
       )}
+      <TranslationToast
+        languageName={toastLang}
+        show={showToast}
+        onDone={() => setShowToast(false)}
+      />
     </div>
   );
 }
